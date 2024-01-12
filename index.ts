@@ -10,9 +10,9 @@ const app : Express = _express();
 _dotenv.config({"path" : ".env"})
 
 // APERTURA SERVER
-const DBNAME : string = "unicorns";
+const DBNAME : string = process.env.DBNAME!;
+const PORTA : number = parseInt(process.env.PORT!);
 const [driver, errore] = await Promise.all([MongoDriver.CreaDatabase(process.env.STR_CONN!, DBNAME), paginaErrore]);
-const PORTA : number = 1337;
 const server : TipoServer = _http.createServer(app);
 
 server.listen(PORTA, () => console.log("Server Avviato"));
