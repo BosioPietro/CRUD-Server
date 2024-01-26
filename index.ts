@@ -49,11 +49,24 @@ app.use("/", (req : Request, res : Response, next : NextFunction) => {
 }) 
 
 /*  5. CORS */
-const corsOptions : CorsOptions = {
-    origin: (origin : string | undefined, callback : Function) => callback(null, true),
+const whitelist : string[] = [
+    "http://localhost:3000",
+    "http://localhost:4200",
+    "http://localhost:3001",
+    "http://localhost:8080",
+    "https://bosio-crud-server.onrender.com"
+]
+const corsOptions = {
+    origin: (origin : string | undefined, callback : (err : Error | null, allow? : boolean) => void) => {
+        if (!origin) return callback(null, true);
+        if (whitelist.indexOf(origin) === -1) {
+            const msg = `The CORS policy for this site does not allow access from the specified Origin.`
+            return callback(new Error(msg), false);
+        }
+        else return callback(null, true);
+    },
     credentials: true
-}
-
+};
 app.use("/", _cors(corsOptions));
 
 // ROUTE FINALI
